@@ -1,4 +1,4 @@
-package com.example.material_kit_flutter
+package com.Ankitist.whatsapp_status_saver
 
 import io.flutter.embedding.android.FlutterActivity
 

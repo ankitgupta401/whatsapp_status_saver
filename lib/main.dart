@@ -14,7 +14,7 @@ class _MaterialKitPROFlutterState extends State<MaterialKitPROFlutter> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: "Material Kit PRO Flutter",
+        title: "Whatsapp Status Saver",
         debugShowCheckedModeBanner: false,
         initialRoute: "/home",
         routes: <String, WidgetBuilder>{

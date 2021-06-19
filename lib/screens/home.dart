@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_kit_flutter/widgets/drawer.dart';
+
 import 'package:material_kit_flutter/widgets/imagesList.dart';
 import 'package:material_kit_flutter/widgets/videoList.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -98,7 +98,7 @@ class _PermissionsCheckerState extends State<PermissionsChecker> {
     return Scaffold(
       backgroundColor: MaterialColors.bgColorScreen,
       // key: _scaffoldKey,
-      drawer: MaterialDrawer(currentPage: "Home"),
+
       body: DefaultTabController(
         length: 2,
         child: FutureBuilder(
@@ -221,7 +221,7 @@ class _MyAppState extends State<MyApp> {
           onCatChange: changeExt),
       backgroundColor: MaterialColors.bgColorScreen,
       // key: _scaffoldKey,
-      drawer: MaterialDrawer(currentPage: "Home"),
+
       body: CheckAndRender(ext: ext),
     );
   }

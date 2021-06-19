@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:material_kit_flutter/constants/Theme.dart';
+// import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+// import 'package:material_kit_flutter/constants/Theme.dart';
 
 // import 'package:material_kit_flutter/screens/categories.dart';
 // import 'package:material_kit_flutter/screens/best-deals.dart';
 // import 'package:material_kit_flutter/screens/search.dart';
 // import 'package:material_kit_flutter/screens/cart.dart';
 // import 'package:material_kit_flutter/screens/chat.dart';
-
-import 'package:material_kit_flutter/widgets/input.dart';
 
 class Navbar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -57,7 +55,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
 class _NavbarState extends State<Navbar> {
   String activeTag;
 
-  ItemScrollController _scrollController = ItemScrollController();
+  // ItemScrollController _scrollController = ItemScrollController();
   bool photos = true;
   void initState() {
     if (widget.tags != null && widget.tags.length != 0) {
@@ -102,25 +100,15 @@ class _NavbarState extends State<Navbar> {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                          icon: Icon(
-                              !widget.backButton
-                                  ? Icons.menu
-                                  : Icons.arrow_back_ios,
-                              color: !widget.transparent
-                                  ? (widget.bgColor == Colors.white
-                                      ? Colors.black
-                                      : Colors.white)
-                                  : Colors.white,
-                              size: 24.0),
-                          onPressed: () {
-                            if (!widget.backButton)
-                              Scaffold.of(context).openDrawer();
-                            else
-                              Navigator.pop(context);
-                          }),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.asset(
+                          "assets/img/logo_wa.png",
+                          width: 60.0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 1.0),
                         child: Text(widget.title,
                             style: TextStyle(
                                 color: !widget.transparent
@@ -129,7 +117,7 @@ class _NavbarState extends State<Navbar> {
                                         : Colors.white)
                                     : Colors.white,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 18.0)),
+                                fontSize: 20.0)),
                       ),
                     ],
                   ),
@@ -176,30 +164,30 @@ class _NavbarState extends State<Navbar> {
                   //   )
                 ],
               ),
-              if (widget.searchBar)
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 8, bottom: 4, left: 15, right: 15),
-                  child: Input(
-                      placeholder: "What are you looking for?",
-                      controller: widget.searchController,
-                      onChanged: widget.searchOnChanged,
-                      autofocus: widget.searchAutofocus,
-                      outlineBorder: true,
-                      enabledBorderColor: Colors.black.withOpacity(0.2),
-                      focusedBorderColor: MaterialColors.muted,
-                      suffixIcon:
-                          Icon(Icons.zoom_in, color: MaterialColors.muted),
-                      onTap: () {
-                        // if (!widget.isOnSearch)
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => Search()));
-                      }),
-                ),
+              // if (widget.searchBar)
+              // Padding(
+              //   padding: const EdgeInsets.only(
+              //       top: 8, bottom: 4, left: 15, right: 15),
+              // child: Input(
+              //     placeholder: "What are you looking for?",
+              //     controller: widget.searchController,
+              //     onChanged: widget.searchOnChanged,
+              //     autofocus: widget.searchAutofocus,
+              //     outlineBorder: true,
+              //     enabledBorderColor: Colors.black.withOpacity(0.2),
+              //     focusedBorderColor: MaterialColors.muted,
+              //     suffixIcon:
+              //         Icon(Icons.zoom_in, color: MaterialColors.muted),
+              //     onTap: () {
+              //       // if (!widget.isOnSearch)
+              //       // Navigator.push(
+              //       //     context,
+              //       //     MaterialPageRoute(
+              //       //         builder: (context) => Search()));
+              //     }),
+              // ),
               SizedBox(
-                height: tagsExist ? 0 : 20,
+                height: tagsExist ? 0 : 8,
               ),
               if (categories)
                 Row(
@@ -232,7 +220,7 @@ class _NavbarState extends State<Navbar> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(Icons.border_all,
+                              Icon(Icons.photo,
                                   color: Colors.black87, size: 25.0),
                               SizedBox(width: 10),
                               Text(widget.categoryOne,
@@ -275,7 +263,7 @@ class _NavbarState extends State<Navbar> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(Icons.camera_enhance,
+                              Icon(Icons.video_call,
                                   color: Colors.black87, size: 25.0),
                               SizedBox(width: 10),
                               Text(widget.categoryTwo,
@@ -288,50 +276,50 @@ class _NavbarState extends State<Navbar> {
                     )
                   ],
                 ),
-              if (tagsExist)
-                Container(
-                  height: 40,
-                  child: ScrollablePositionedList.builder(
-                    itemScrollController: _scrollController,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: widget.tags.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          if (activeTag != widget.tags[index]) {
-                            setState(() => activeTag = widget.tags[index]);
-                            _scrollController.scrollTo(
-                                index: index == widget.tags.length - 1 ? 1 : 0,
-                                duration: Duration(milliseconds: 420),
-                                curve: Curves.easeIn);
-                            if (widget.getCurrentPage != null)
-                              widget.getCurrentPage(activeTag);
-                          }
-                        },
-                        child: Container(
-                            margin: EdgeInsets.only(
-                                left: index == 0 ? 46 : 8, right: 8),
-                            padding: EdgeInsets.only(left: 20, right: 20),
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        width: 2.0,
-                                        color: activeTag == widget.tags[index]
-                                            ? MaterialColors.primary
-                                            : Colors.transparent))),
-                            child: Center(
-                              child: Text(widget.tags[index],
-                                  style: TextStyle(
-                                      color: activeTag == widget.tags[index]
-                                          ? MaterialColors.primary
-                                          : MaterialColors.placeholder,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14.0)),
-                            )),
-                      );
-                    },
-                  ),
-                )
+              // if (tagsExist)
+              //   Container(
+              //     height: 40,
+              //     child: ScrollablePositionedList.builder(
+              //       itemScrollController: _scrollController,
+              //       scrollDirection: Axis.horizontal,
+              //       itemCount: widget.tags.length,
+              //       itemBuilder: (BuildContext context, int index) {
+              //         return GestureDetector(
+              //           onTap: () {
+              //             if (activeTag != widget.tags[index]) {
+              //               setState(() => activeTag = widget.tags[index]);
+              //               _scrollController.scrollTo(
+              //                   index: index == widget.tags.length - 1 ? 1 : 0,
+              //                   duration: Duration(milliseconds: 420),
+              //                   curve: Curves.easeIn);
+              //               if (widget.getCurrentPage != null)
+              //                 widget.getCurrentPage(activeTag);
+              //             }
+              //           },
+              //           child: Container(
+              //               margin: EdgeInsets.only(
+              //                   left: index == 0 ? 46 : 8, right: 8),
+              //               padding: EdgeInsets.only(left: 20, right: 20),
+              //               decoration: BoxDecoration(
+              //                   border: Border(
+              //                       bottom: BorderSide(
+              //                           width: 2.0,
+              //                           color: activeTag == widget.tags[index]
+              //                               ? MaterialColors.primary
+              //                               : Colors.transparent))),
+              //               child: Center(
+              //                 child: Text(widget.tags[index],
+              //                     style: TextStyle(
+              //                         color: activeTag == widget.tags[index]
+              //                             ? MaterialColors.primary
+              //                             : MaterialColors.placeholder,
+              //                         fontWeight: FontWeight.w500,
+              //                         fontSize: 14.0)),
+              //               )),
+              //         );
+              //       },
+              //     ),
+              //   )
             ],
           ),
         ));

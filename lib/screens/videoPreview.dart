@@ -1,20 +1,34 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+
 import 'package:material_kit_flutter/constants/Theme.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:material_kit_flutter/screens/videoStatus.dart';
+
+import 'package:video_player/video_player.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 
-class ImagePreview extends StatefulWidget {
-  ImagePreview({this.imgPath});
+class VideoPreview extends StatefulWidget {
+  const VideoPreview({this.imgPath});
   final imgPath;
-
   @override
-  _ImagePreviewState createState() => _ImagePreviewState();
+  _VideoPreviewState createState() => _VideoPreviewState();
 }
 
-class _ImagePreviewState extends State<ImagePreview> {
+class _VideoPreviewState extends State<VideoPreview> {
+  @override
+  void initState() {
+    super.initState();
+    print('Video file you are looking for:' + widget.imgPath);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _onLoading(bool t, String str) {
     if (t) {
       showDialog(
@@ -61,12 +75,6 @@ class _ImagePreviewState extends State<ImagePreview> {
                           const Padding(
                             padding: EdgeInsets.all(10.0),
                           ),
-                          const Text('FileManager > Pictures',
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.teal)),
-                          const Padding(
-                            padding: EdgeInsets.all(10.0),
-                          ),
                           MaterialButton(
                             child: const Text('Close'),
                             color: Colors.teal,
@@ -86,19 +94,14 @@ class _ImagePreviewState extends State<ImagePreview> {
 
   _save() async {
     _onLoading(true, '');
-    final myUri = Uri.parse(widget.imgPath);
-    final originalImageFile = File.fromUri(myUri);
-    Uint8List bytes;
-    await originalImageFile.readAsBytes().then((value) {
-      bytes = Uint8List.fromList(value);
-      print('reading of bytes is completed');
-    }).catchError((onError) {
-      print('Exception Error while reading audio from path:' +
-          onError.toString());
+
+    GallerySaver.saveVideo(widget.imgPath, albumName: 'StatusSaver')
+        .then((bool success) {
+      _onLoading(
+        false,
+        'Video Saved',
+      );
     });
-    final result = await ImageGallerySaver.saveImage(Uint8List.fromList(bytes));
-    print(result);
-    _onLoading(false, 'Image Saved');
   }
 
   _share() async {
@@ -116,8 +119,8 @@ class _ImagePreviewState extends State<ImagePreview> {
     Navigator.pop(context);
     await WcFlutterShare.share(
         sharePopupTitle: 'share',
-        fileName: 'share.jpg',
-        mimeType: 'image/jpg',
+        fileName: 'share.mp4',
+        mimeType: 'video/mp4',
         bytesOfFile: bytes.buffer.asUint8List());
   }
 
@@ -128,28 +131,17 @@ class _ImagePreviewState extends State<ImagePreview> {
         title: Text("Preview"),
         backgroundColor: Colors.black,
       ),
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.black,
       body: Column(
         children: <Widget>[
           Expanded(
             flex: 10,
             child: Container(
-              child: PhotoView.customChild(
-                heroAttributes: PhotoViewHeroAttributes(tag: widget.imgPath),
-                child: Container(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Image.file(
-                          File(widget.imgPath),
-                          fit: BoxFit.contain,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                initialScale: 1.0,
+              child: StatusVideo(
+                videoPlayerController:
+                    VideoPlayerController.file(File(widget.imgPath)),
+                looping: true,
+                videoSrc: widget.imgPath,
               ),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:material_kit_flutter/screens/videoPreview.dart';
 import 'package:thumbnails/thumbnails.dart';
 
 class VideoSaverBody extends StatelessWidget {
@@ -48,10 +49,11 @@ class VideoSaverBody extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8)),
                 child: InkWell(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     new MaterialPageRoute(
-                    //         builder: (context) => new ViewPhotos(imgPath)));
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) =>
+                                VideoPreview(imgPath: videoList[index])));
                   },
                   child: FutureBuilder(
                       future: _getImage(videoList[index]),
