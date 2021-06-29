@@ -31,20 +31,26 @@ class _PermissionsCheckerState extends State<PermissionsChecker> {
     /// bool result = await
     /// SimplePermissions.checkPermission(Permission.ReadExternalStorage);
     final result = await Permission.storage.status;
+    final result2 = await Permission.manageExternalStorage.status;
     print('Checking Storage Permission ' + result.toString());
     setState(() {
       _storagePermissionCheck = 1;
     });
-    if (result.isDenied) {
+    if (result.isDenied || result2.isDenied) {
       await requestStoragePermission();
       setState(() {});
       return 1;
     } else if (result.isGranted) {
       return 1;
     } else {
-      await requestStoragePermission();
-      setState(() {});
-      return 1;
+      int res = 0;
+      do {
+        res = await requestStoragePermission();
+      } while (res == 0);
+      if (res == 1) {
+        setState(() {});
+        return 1;
+      }
     }
   }
 
@@ -52,9 +58,11 @@ class _PermissionsCheckerState extends State<PermissionsChecker> {
     /// PermissionStatus result = await
     /// SimplePermissions.requestPermission(Permission.ReadExternalStorage);
     final result = await [Permission.storage].request();
-    print(result);
+    final result2 = await [Permission.manageExternalStorage].request();
+    print(result2);
     setState(() {});
-    if (result[Permission.storage].isDenied) {
+    if (result[Permission.storage].isDenied ||
+        result2[Permission.manageExternalStorage].isDenied) {
       return 0;
     } else if (result[Permission.storage].isGranted) {
       return 1;

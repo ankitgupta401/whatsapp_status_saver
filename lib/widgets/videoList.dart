@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:material_kit_flutter/screens/videoPreview.dart';
+import 'package:material_kit_flutter/utils/GetStatusfiles.dart';
 import 'package:thumbnails/thumbnails.dart';
 
 class VideoSaverBody extends StatelessWidget {
-  final Directory _photoDir =
-      new Directory('/storage/emulated/0/WhatsApp/Media/.Statuses');
+  Directory _photoDir;
+  final GetStatusFiles getDir = new GetStatusFiles();
   Future<String> _getImage(videoPathUrl) async {
     //await Future.delayed(Duration(milliseconds: 500));
     final thumb = await Thumbnails.getThumbnail(
@@ -20,6 +21,7 @@ class VideoSaverBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _photoDir = getDir.getStatusURI();
     if (!Directory("${_photoDir.path}").existsSync()) {
       return Container(
         padding: EdgeInsets.only(bottom: 60.0),
