@@ -102,9 +102,12 @@ class _NavbarState extends State<Navbar> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: Image.asset(
-                          "assets/img/logo_wa.png",
-                          width: 60.0,
+                        child: Hero(
+                          tag: "assets/img/logo_wa.png",
+                          child: Image.asset(
+                            "assets/img/logo_wa.png",
+                            width: 60.0,
+                          ),
                         ),
                       ),
                       Padding(
