@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:material_kit_flutter/screens/home.dart';
+import 'package:whatsapp_status_saver/screens/home.dart';
 
 class Splash extends StatefulWidget {
   @override

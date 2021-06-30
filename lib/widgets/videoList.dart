@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:material_kit_flutter/screens/videoPreview.dart';
-import 'package:material_kit_flutter/utils/GetStatusfiles.dart';
+import 'package:whatsapp_status_saver/screens/videoPreview.dart';
 import 'package:thumbnails/thumbnails.dart';
 
 class VideoSaverBody extends StatelessWidget {
-  Directory _photoDir;
-  final GetStatusFiles getDir = new GetStatusFiles();
+  VideoSaverBody({this.photoDir});
+  final Directory photoDir;
   Future<String> _getImage(videoPathUrl) async {
     //await Future.delayed(Duration(milliseconds: 500));
     final thumb = await Thumbnails.getThumbnail(
@@ -21,8 +20,17 @@ class VideoSaverBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _photoDir = getDir.getStatusURI();
-    if (!Directory("${_photoDir.path}").existsSync()) {
+    if (photoDir.path == "/") {
+      return Container(
+        padding: EdgeInsets.only(bottom: 60.0),
+        child: Center(
+          child: Text(
+            "Loading ...",
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      );
+    } else if (!Directory("${photoDir.path}").existsSync()) {
       return Container(
         padding: EdgeInsets.only(bottom: 60.0),
         child: Center(
@@ -33,7 +41,7 @@ class VideoSaverBody extends StatelessWidget {
         ),
       );
     } else {
-      var videoList = _photoDir
+      var videoList = photoDir
           .listSync()
           .map((item) => item.path)
           .where((item) => item.endsWith('.mp4'))

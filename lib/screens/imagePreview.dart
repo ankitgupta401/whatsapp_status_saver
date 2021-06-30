@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:material_kit_flutter/constants/Theme.dart';
+import 'package:whatsapp_status_saver/constants/Theme.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';

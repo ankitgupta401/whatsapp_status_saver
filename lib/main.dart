@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get/get.dart';
-import 'package:material_kit_flutter/screens/splash.dart';
+import 'package:whatsapp_status_saver/screens/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,12 +1,15 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-import 'package:material_kit_flutter/widgets/imagesList.dart';
-import 'package:material_kit_flutter/widgets/videoList.dart';
+import 'package:flutter/material.dart';
+import 'package:whatsapp_status_saver/utils/GetStatusfiles.dart';
+
+import 'package:whatsapp_status_saver/widgets/imagesList.dart';
+import 'package:whatsapp_status_saver/widgets/videoList.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:material_kit_flutter/constants/Theme.dart';
+import 'package:whatsapp_status_saver/constants/Theme.dart';
 
 //widgets
-import 'package:material_kit_flutter/widgets/navbar.dart';
+import 'package:whatsapp_status_saver/widgets/navbar.dart';
 
 class Home extends StatelessWidget {
   // final GlobalKey _scaffoldKey = new GlobalKey();
@@ -26,17 +29,19 @@ class PermissionsChecker extends StatefulWidget {
 class _PermissionsCheckerState extends State<PermissionsChecker> {
   int _storagePermissionCheck;
   Future<int> _storagePermissionChecker;
-
+  Future<Directory> getDir;
   Future<int> checkStoragePermission() async {
     /// bool result = await
     /// SimplePermissions.checkPermission(Permission.ReadExternalStorage);
     final result = await Permission.storage.status;
-    final result2 = await Permission.manageExternalStorage.status;
+    // final result2 = await Permission.manageExternalStorage.status;
     print('Checking Storage Permission ' + result.toString());
     setState(() {
       _storagePermissionCheck = 1;
     });
-    if (result.isDenied || result2.isDenied) {
+    if (result.isDenied
+        // || result2.isDenied
+        ) {
       await requestStoragePermission();
       setState(() {});
       return 1;
@@ -58,11 +63,14 @@ class _PermissionsCheckerState extends State<PermissionsChecker> {
     /// PermissionStatus result = await
     /// SimplePermissions.requestPermission(Permission.ReadExternalStorage);
     final result = await [Permission.storage].request();
-    final result2 = await [Permission.manageExternalStorage].request();
-    print(result2);
+    // final result2 = await [Permission.accessMediaLocation].request();
+    // final result2 = await [Permission.manageExternalStorage].request();
+    // print(result2);
+    // print(result3);
     setState(() {});
-    if (result[Permission.storage].isDenied ||
-        result2[Permission.manageExternalStorage].isDenied) {
+    if (result[Permission.storage].isDenied
+        // ||    result2[Permission.accessMediaLocation].isDenied
+        ) {
       return 0;
     } else if (result[Permission.storage].isGranted) {
       return 1;
@@ -210,6 +218,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String ext = '.jpg';
+  Directory dir = Directory("/");
   void changeExt(ext) {
     print(ext);
     if (ext != this.ext) {
@@ -217,6 +226,20 @@ class _MyAppState extends State<MyApp> {
         this.ext = ext;
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getDir();
+  }
+
+  getDir() async {
+    Directory fil = await GetStatusFiles().getStatusURI();
+
+    setState(() {
+      dir = fil;
+    });
   }
 
   @override
@@ -230,19 +253,20 @@ class _MyAppState extends State<MyApp> {
       backgroundColor: MaterialColors.bgColorScreen,
       // key: _scaffoldKey,
 
-      body: CheckAndRender(ext: ext),
+      body: CheckAndRender(ext: ext, dir: dir),
     );
   }
 }
 
 class CheckAndRender extends StatelessWidget {
-  CheckAndRender({this.ext});
+  CheckAndRender({this.ext, this.dir});
   final ext;
+  final dir;
   @override
   Widget build(BuildContext context) {
     if (ext == '.jpg')
-      return ImageSaverBody();
+      return ImageSaverBody(photoDir: dir);
     else
-      return VideoSaverBody();
+      return VideoSaverBody(photoDir: dir);
   }
 }

@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:material_kit_flutter/screens/imagePreview.dart';
-import 'package:material_kit_flutter/utils/GetStatusfiles.dart';
+import 'package:whatsapp_status_saver/screens/imagePreview.dart';
 
 class ImageSaverBody extends StatelessWidget {
-  Directory _photoDir;
-  final GetStatusFiles getDir = new GetStatusFiles();
+  ImageSaverBody({this.photoDir});
+  final Directory photoDir;
 
   @override
   Widget build(BuildContext context) {
-    _photoDir = getDir.getStatusURI();
-    if (!Directory("${_photoDir.path}").existsSync()) {
+    print(photoDir.path);
+    if (photoDir.path == "/") {
+      return Container(
+        padding: EdgeInsets.only(bottom: 60.0),
+        child: Center(
+          child: Text(
+            "Loading ...",
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      );
+    } else if (!Directory("${photoDir.path}").existsSync()) {
       return Container(
         padding: EdgeInsets.only(bottom: 60.0),
         child: Center(
@@ -22,8 +31,8 @@ class ImageSaverBody extends StatelessWidget {
         ),
       );
     } else {
-      var imageList = _photoDir
-          .listSync()
+      var imageList = photoDir
+          .listSync(recursive: false)
           .map((item) => item.path)
           .where((item) => item.endsWith('.jpg'))
           .toList(growable: false);
