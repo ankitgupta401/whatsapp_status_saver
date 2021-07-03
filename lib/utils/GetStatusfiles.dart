@@ -10,7 +10,6 @@ class GetStatusFiles {
     final Directory _photoDir2 = new Directory(
         await ExtStorage.getExternalStorageDirectory() +
             '/Android/media/com.whatsapp/WhatsApp/Media/.Statuses');
-    print(_photoDir2.listSync(recursive: true).toList());
     if (Directory("${_photoDir.path}").existsSync()) {
       return _photoDir;
     } else {
