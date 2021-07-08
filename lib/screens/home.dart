@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:whatsapp_status_saver/utils/GetStatusfiles.dart';
+import 'package:whatsapp_status_saver/widgets/drawer.dart';
 
 import 'package:whatsapp_status_saver/widgets/imagesList.dart';
 import 'package:whatsapp_status_saver/widgets/videoList.dart';
@@ -60,17 +61,10 @@ class _PermissionsCheckerState extends State<PermissionsChecker> {
   }
 
   Future<int> requestStoragePermission() async {
-    /// PermissionStatus result = await
-    /// SimplePermissions.requestPermission(Permission.ReadExternalStorage);
     final result = await [Permission.storage].request();
-    // final result2 = await [Permission.accessMediaLocation].request();
-    // final result2 = await [Permission.manageExternalStorage].request();
-    // print(result2);
-    // print(result3);
+
     setState(() {});
-    if (result[Permission.storage].isDenied
-        // ||    result2[Permission.accessMediaLocation].isDenied
-        ) {
+    if (result[Permission.storage].isDenied) {
       return 0;
     } else if (result[Permission.storage].isGranted) {
       return 1;
@@ -188,7 +182,7 @@ class _PermissionsCheckerState extends State<PermissionsChecker> {
                     child: const Center(
                       child: Text(
                         '''
-Something went wrong.. Please uninstall and Install Again.''',
+                        Something went wrong.. Please uninstall and Install Again.''',
                         style: TextStyle(fontSize: 20.0),
                       ),
                     ),
@@ -219,11 +213,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String ext = '.jpg';
   Directory dir = Directory("/");
+  final PageController controller = PageController(initialPage: 0);
+  String pageName = "WhatsApp Status Saver";
   void changeExt(ext) {
     print(ext);
     if (ext != this.ext) {
       setState(() {
         this.ext = ext;
+
+        controller.jumpToPage(ext == '.jpg' ? 0 : 1);
       });
     }
   }
@@ -231,14 +229,27 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    getDir();
+    // getDir();
+    Map fil = GetStatusFiles().getPageName();
+    print(fil);
+    setState(() {
+      dir = fil["dir"];
+      pageName = fil["pageName"];
+    });
   }
 
   getDir() async {
-    Directory fil = await GetStatusFiles().getStatusURI();
+    Directory fil = await GetStatusFiles().getStatusURI(pageName);
 
     setState(() {
       dir = fil;
+    });
+  }
+
+  changePage(page) {
+    setState(() {
+      pageName = page;
+      getDir();
     });
   }
 
@@ -246,27 +257,31 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Navbar(
-          title: "Whatsapp Status Saver",
-          categoryOne: "Photos",
-          categoryTwo: "Videos",
-          onCatChange: changeExt),
+        title: pageName,
+        categoryOne: "Photos",
+        categoryTwo: "Videos",
+        onCatChange: changeExt,
+        photos: ext == '.jpg' ? true : false,
+      ),
+      drawer: MaterialDrawer(currentPage: pageName, changePage: changePage),
       backgroundColor: MaterialColors.bgColorScreen,
       // key: _scaffoldKey,
 
-      body: CheckAndRender(ext: ext, dir: dir),
+      body: PageView(
+        scrollDirection: Axis.horizontal,
+        controller: controller,
+        onPageChanged: (val) {
+          if (val == 0) {
+            changeExt('.jpg');
+          } else {
+            changeExt('.mp4');
+          }
+        },
+        children: <Widget>[
+          ImageSaverBody(photoDir: dir, pageName: pageName),
+          VideoSaverBody(photoDir: dir, pageName: pageName)
+        ],
+      ),
     );
-  }
-}
-
-class CheckAndRender extends StatelessWidget {
-  CheckAndRender({this.ext, this.dir});
-  final ext;
-  final dir;
-  @override
-  Widget build(BuildContext context) {
-    if (ext == '.jpg')
-      return ImageSaverBody(photoDir: dir);
-    else
-      return VideoSaverBody(photoDir: dir);
   }
 }

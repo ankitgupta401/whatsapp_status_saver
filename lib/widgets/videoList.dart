@@ -5,7 +5,8 @@ import 'package:whatsapp_status_saver/screens/videoPreview.dart';
 import 'package:thumbnails/thumbnails.dart';
 
 class VideoSaverBody extends StatelessWidget {
-  VideoSaverBody({this.photoDir});
+  VideoSaverBody({this.photoDir, this.pageName});
+  final String pageName;
   final Directory photoDir;
   Future<String> _getImage(videoPathUrl) async {
     //await Future.delayed(Duration(milliseconds: 500));
@@ -20,7 +21,17 @@ class VideoSaverBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (photoDir.path == "/") {
+     if (photoDir == null) {
+      return Container(
+        padding: EdgeInsets.only(bottom: 60.0),
+        child: Center(
+          child: Text(
+            'Install ${pageName.split('Saver')[0]}! \n Your Friend\'s Status Will Show Here',
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      );
+    } else if (photoDir.path == "/") {
       return Container(
         padding: EdgeInsets.only(bottom: 60.0),
         child: Center(
@@ -30,17 +41,7 @@ class VideoSaverBody extends StatelessWidget {
           ),
         ),
       );
-    } else if (!Directory("${photoDir.path}").existsSync()) {
-      return Container(
-        padding: EdgeInsets.only(bottom: 60.0),
-        child: Center(
-          child: Text(
-            "Install WhatsApp\nYour Friend's Status Will Show Here",
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-      );
-    } else {
+    }else {
       var videoList = photoDir
           .listSync()
           .map((item) => item.path)
@@ -83,12 +84,8 @@ class VideoSaverBody extends StatelessWidget {
                             );
                           }
                         } else {
-                          return Hero(
-                            tag: videoList[index],
-                            child: SizedBox(
-                              height: 280.0,
-                              child: Image.asset('assets/img/loader.gif'),
-                            ),
+                          return const Center(
+                            child: CircularProgressIndicator(),
                           );
                         }
                       }),

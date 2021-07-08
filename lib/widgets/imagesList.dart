@@ -4,28 +4,27 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:whatsapp_status_saver/screens/imagePreview.dart';
 
 class ImageSaverBody extends StatelessWidget {
-  ImageSaverBody({this.photoDir});
+  ImageSaverBody({this.photoDir, this.pageName});
   final Directory photoDir;
-
+  final String pageName;
   @override
   Widget build(BuildContext context) {
-    print(photoDir.path);
-    if (photoDir.path == "/") {
+    if (photoDir == null) {
+      return Container(
+        padding: EdgeInsets.only(bottom: 60.0),
+        child: Center(
+          child: Text(
+            'Install ${pageName.split('Saver')[0]}! \n Your Friend\'s Status Will Show Here',
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      );
+    } else if (photoDir.path == "/") {
       return Container(
         padding: EdgeInsets.only(bottom: 60.0),
         child: Center(
           child: Text(
             "Loading ...",
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-      );
-    } else if (!Directory("${photoDir.path}").existsSync()) {
-      return Container(
-        padding: EdgeInsets.only(bottom: 60.0),
-        child: Center(
-          child: Text(
-            "Install WhatsApp\nYour Friend's Status Will Show Here",
             style: TextStyle(fontSize: 18.0),
           ),
         ),
