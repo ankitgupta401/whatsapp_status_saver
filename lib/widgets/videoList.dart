@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:whatsapp_status_saver/screens/videoPreview.dart';
-import 'package:thumbnails/thumbnails.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:path_provider/path_provider.dart';
 
 class VideoSaverBody extends StatelessWidget {
   VideoSaverBody({this.photoDir, this.pageName});
@@ -10,18 +11,18 @@ class VideoSaverBody extends StatelessWidget {
   final Directory photoDir;
   Future<String> _getImage(videoPathUrl) async {
     //await Future.delayed(Duration(milliseconds: 500));
-    final thumb = await Thumbnails.getThumbnail(
-        videoFile: videoPathUrl,
-        imageType:
-            ThumbFormat.PNG, //this image will store in created folderpath
-        quality: 10);
 
-    return thumb;
+    return await VideoThumbnail.thumbnailFile(
+      video: videoPathUrl,
+      thumbnailPath: (await getTemporaryDirectory()).path,
+      imageFormat: ImageFormat.PNG,
+      quality: 75,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-     if (photoDir == null) {
+    if (photoDir == null) {
       return Container(
         padding: EdgeInsets.only(bottom: 60.0),
         child: Center(
@@ -41,7 +42,7 @@ class VideoSaverBody extends StatelessWidget {
           ),
         ),
       );
-    }else {
+    } else {
       var videoList = photoDir
           .listSync()
           .map((item) => item.path)
