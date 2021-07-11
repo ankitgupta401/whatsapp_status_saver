@@ -61,7 +61,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                           const Padding(
                             padding: EdgeInsets.all(10.0),
                           ),
-                          const Text('FileManager > Pictures',
+                          const Text('Gallery > Pictures',
                               style: TextStyle(
                                   fontSize: 16.0, color: Colors.teal)),
                           const Padding(

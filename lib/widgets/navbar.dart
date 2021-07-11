@@ -162,7 +162,7 @@ class _NavbarState extends State<Navbar> {
                         GestureDetector(
                           onTap: () async {
                             final originalImageFile =
-                                await getImageFileFromAssets('img/share.png');
+                                await getImageFileFromAssets('img/share.jpg');
                             Uint8List bytes;
                             await originalImageFile.readAsBytes().then((value) {
                               bytes = Uint8List.fromList(value);
@@ -177,8 +177,8 @@ class _NavbarState extends State<Navbar> {
                                 sharePopupTitle: 'share',
                                 text:
                                     'WhatsApp Status Saver App Lets You Save Image And Video Status From Your WhatsApp Directly To Your Phone\'s Gallery! \n\nFeatures:\nThis App Lets You Save: \n1. WhatsApp Status \n2. WhatsApp Business Status \n3. GBWhatsApp Status \n\nAvailable On Google Play! \nDownload Now 👇 \nhttps://play.google.com/store/apps/details?id=com.Ankitist.whatsapp_status_saver',
-                                fileName: 'share.png',
-                                mimeType: 'image/png',
+                                fileName: 'share.jpg',
+                                mimeType: 'image/jpg',
                                 bytesOfFile: bytes.buffer.asUint8List());
                           },
                           child: IconButton(
